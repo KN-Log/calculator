@@ -7,10 +7,9 @@
 
 int prior(char c);
 char* exec_string(char* str);
-
+int excep(char* str);
 
 int main(){
-	
 	stack_t s;
 	char* str=(char*)malloc(256*sizeof(char));
 	init(&s);
@@ -25,7 +24,12 @@ int main(){
 	if(!fgets(str,256,stdin)){
 		return 1;
 	}
-		
+		if(excep(str)!=0){
+			
+			free(str);
+			main();
+		}
+
 		str=exec_string(str);
 	
 		while(*str!='\0'){
@@ -77,6 +81,25 @@ int main(){
 	return 0;
 }
 
+int excep(char* str){
+	
+	int len=strlen(str);
+	
+	if(len == 0){
+		fprintf(stderr, "Ошибка: введена пустая строка\n");
+		return 1;
+	}
+	
+	for(int i=0; i<len; i++){
+		if(isalpha(str[i])){
+			fprintf(stderr, "Ошибка: введите корректное выражение\n");
+			return 2;		
+		}
+	}
+	return 0;
+
+}
+
 int prior(char c){
 	
 	switch(c){
@@ -95,11 +118,6 @@ int prior(char c){
 
 char* exec_string(char* str){
 	
-	int len=strlen(str);
-	
-	if(len == 0){
-		fprintf(stderr, "Ошибка: введена пустая строка\n");
-	}
 
 	char* outputstr= (char*) malloc(256*sizeof(char));
 	int point=0;
